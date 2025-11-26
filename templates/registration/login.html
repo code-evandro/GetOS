@@ -1,0 +1,143 @@
+{% load static %}  
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>GetOS - Login</title>
+    <style>
+        #logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 0.5px;
+        }
+
+        #logo {
+            width: 250px;
+            height: 250px;
+            object-fit: contain;
+            filter: brightness(0) invert(1);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0f4037, #2b6661);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            width: 350px;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        #login-title {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin: 0;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            box-sizing: border-box;
+        }
+
+        input::placeholder {
+            color: #ccc;
+        }
+
+        .remember-me {
+            align-self: flex-start;
+            margin: 5px 0 10px;
+            font-size: 14px;
+        }
+
+        .remember-me input {
+            margin-right: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #d9534f;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        button:hover {
+            background-color: #c9302c;
+        }
+
+        .msg-error {
+            margin-top: 10px;
+            color: #ff9999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div id="logo-container">
+            <img id="logo" src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
+        </div>
+        <div id="login-title">
+            <h2>Login</h2>
+        </div>
+        <p>Entre para continuar</p>
+        <form method="post" action="{% url 'login' %}" autocomplete="on">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Nome de usuário" autocomplete="username" required>
+            <input type="password" name="password" placeholder="Senha" autocomplete="current-password" required>
+
+            <label class="remember-me">
+                <input type="checkbox" name="remember_me"> Lembrar-me
+            </label>
+
+            <button type="submit">Log in</button>
+        </form>
+
+        {% if form.errors %}
+            <p class="msg-error">Usuário ou senha inválidos.</p>
+        {% endif %}
+
+        {% if messages %}
+            {% for message in messages %}
+                <p class="msg-error">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+</body>
+</html>

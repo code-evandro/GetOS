@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<title>Cadastrar Setor - GetOS</title>
+    
+</head>
+<body>
+    <div class="form-container">
+
+        <div class="top-links">
+            <a href="{% url 'menu' %}">Menu Principal</a>
+            <a href="{% url 'logout_redirect' %}">Sair</a>
+        </div>
+
+        <div id="logo-container">
+            <img id="logo" src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
+        </div>
+
+        <h1>Cadastrar Setor</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "success" %}
+                    <div class="success-msg">{{ message }}</div>
+                {% else %}
+                    <div class="error-msg">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="{% url 'cad_setor' %}">
+            {% csrf_token %}
+
+            <label for="id_nome">Nome</label>
+            {{ form.nome }}
+
+            <label for="id_sigla">Sigla</label>
+            {{ form.sigla }}
+
+            <label for="id_secretaria">Secretaria</label>
+            {{ form.secretaria }}
+
+            <label for="id_ramal">Ramal</label>
+            {{ form.ramal }}
+
+            <button type="submit" class="submit-btn">Cadastrar Setor</button>
+        </form>
+    </div>
+</body>
+</html>

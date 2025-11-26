@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<title>Dashboard - GetOS</title>
+    
+</head>
+<body>
+    <div class="container">
+
+        <div class="top-links">
+            <a href="{% url 'menu' %}">Menu Principal</a>
+            <a href="{% url 'logout_redirect' %}">Sair</a>
+        </div>
+
+        <div class="logo-container">
+            <img src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
+        </div>
+
+        <h1>Dashboard - GetOS</h1>
+
+        <div class="indicadores-grid">
+            <div class="card-indicador">
+                <h3>Ordens Totais</h3>
+                <div class="valor">{{ total_os }}</div>
+                <div class="meta">Meta: 5000</div>
+            </div>
+            <div class="card-indicador">
+                <h3>OS Abertas</h3>
+                <div class="valor">{{ os_abertas }}</div>
+                <div class="meta">Meta: 1500</div>
+            </div>
+            <div class="card-indicador">
+                <h3>OS Finalizadas</h3>
+                <div class="valor">{{ os_finalizadas }}</div>
+                <div class="meta">Meta: 3500</div>
+            </div>
+            <div class="card-indicador">
+                <h3>Últimos 7 dias</h3>
+                <div class="valor">{{ os_ultimos_dias|length }}</div>
+                <div class="meta">Meta: 100</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Gráfico de Ordens por Mês</h2>
+            <canvas id="graficoOS"></canvas>
+        </div>
+
+        <div class="card">
+            <h2>Ordens por Setor</h2>
+            <ul>
+                {% for item in os_por_setor %}
+                    <li class="linha">{{ item.setor__nome }} <span>{{ item.qtd }}</span></li>
+                {% empty %}
+                    <li>Nenhuma ordem registrada.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Ordens por Técnico</h2>
+            <ul>
+                {% for item in os_por_tecnico %}
+                    <li class="linha">{{ item.tecnico__user__username }} <span>{{ item.qtd }}</span></li>
+                {% empty %}
+                    <li>Nenhuma ordem registrada.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Ordens Registradas nos Últimos 7 Dias</h2>
+            <ul>
+                {% for ordem in os_ultimos_dias %}
+                    <li class="linha">
+                        OS #{{ ordem.id }} - {{ ordem.servidor.nome }} ({{ ordem.setor.nome }})
+                        <span>{{ ordem.data|date:"d/m/Y" }}</span>
+                    </li>
+                {% empty %}
+                    <li>Nenhuma ordem recente.</li>
+                {% endfor %}
+            </ul>
+        </div>
+            <div class="card">
+            <h2>📄 Relatórios</h2>
+            <p style="font-size: 15px; color: #ccc; line-height: 1.6;">
+                Em breve você poderá gerar relatórios detalhados em PDF com filtros por setor, técnico ou período. Fique ligado!
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- Chart.js + script com dados reais -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const dados = {{ dados_grafico|safe }};
+
+        const ctx = document.getElementById('graficoOS').getContext('2d');
+        const grafico = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dados.labels,
+                datasets: [{
+                    label: 'Ordens por mês',
+                    data: dados.dados,
+                    fill: true,
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: '#ffffff',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#fff'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#fff'
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: '#fff'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Ordem de Serviço</title>
+    <style>
+        /* ====== BASE ====== */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            color: #000;
+            margin: 40px;
+        }
+
+        /* ====== CABEÇALHO ====== */
+        .header { width: 100%; margin-bottom: 20px; }
+        .header-table { width: 100%; border-collapse: collapse; }
+        .header-table td { border: none; }
+
+        .brand { text-align: center; }
+        .brand img {
+            height: 180px;
+            width: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .title-box { text-align: right; vertical-align: middle; }
+        .title-box h2 { margin: 0; font-size: 16px; }
+        .title-box p  { margin: 4px 0 0 0; font-size: 13px; }
+
+        /* ====== TABELAS ====== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            border: 2px solid #000;           /* borda externa reforçada */
+        }
+        td {
+            border: 1.5px solid #000;         /* divisórias internas reforçadas */
+            padding: 8px;
+            vertical-align: top;
+        }
+
+        /* ====== TÍTULOS DENTRO DAS TABELAS ====== */
+        .titulo {
+            background: #fff;                 /* sem fundo escuro (bom pra impressão) */
+            color: #000;
+            padding: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: none;                     /* a própria linha inferior faz o destaque */
+            border-bottom: 2px solid #000;    /* linha reforçada sob o título */
+        }
+
+        /* ====== ASSINATURAS (SEM BORDA) ====== */
+        .assinatura-tabela {
+            width: 100%;
+            margin-top: 60px;
+            border: none;                     /* sem caixa */
+        }
+        .assinatura-tabela td {
+            width: 50%;
+            text-align: center;
+            vertical-align: bottom;
+            border: none;                     /* sem divisórias internas */
+        }
+        .assinatura-tabela hr {
+            border: none;
+            border-top: 1.2px solid #000;     /* linha mais fina */
+            margin: 0 auto 5px auto;
+            width: 60%;                       /* linha mais curta */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ====== CABEÇALHO ====== -->
+    <div class="header">
+        <table class="header-table">
+            <tr>
+                <td style="width: 300px; vertical-align: middle;">
+                    <div class="brand">
+                        <img src="C:/GetOS/static/imgs/logo_pmbv.png" alt="Prefeitura de Boa Vista">
+                    </div>
+                </td>
+                <td class="title-box">
+                    <h2>O.S. Nº: {{ ordem.id|stringformat:"05d" }}</h2>
+                    <p><strong>Data de Abertura:</strong> {{ ordem.data|date:"d/m/Y" }}</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- ====== DADOS DO SERVIDOR ====== -->
+    <table>
+        <tr>
+            <td colspan="2" class="titulo">DADOS DO SERVIDOR</td>
+        </tr>
+        <tr>
+            <td><strong>Nome:</strong> {{ ordem.servidor.nome }}</td>
+            <td><strong>Setor:</strong> {{ ordem.setor.nome }}</td>
+        </tr>
+        <tr>
+            <td><strong>Ramal:</strong> {{ ordem.ramal }}</td>
+            <td><strong>Técnico Designado:</strong> {{ ordem.tecnico.user.username }}</td>
+        </tr>
+    </table>
+
+    <!-- ====== RELATO DO SERVIDOR ====== -->
+    <table>
+        <tr>
+            <td colspan="2" class="titulo">RELATO DO SERVIDOR</td>
+        </tr>
+        <tr>
+            <td colspan="2">{{ ordem.relato }}</td>
+        </tr>
+    </table>
+
+    <!-- ====== DIAGNÓSTICO ====== -->
+    <table>
+        <tr>
+            <td colspan="2" class="titulo">DIAGNÓSTICO E SERVIÇO A SER PRESTADO</td>
+        </tr>
+        <tr>
+            <td colspan="2"><strong>Técnico:</strong> {{ ordem.tecnico.user.username }}</td>
+        </tr>
+        <tr>
+            <td colspan="2"><strong>Diagnóstico:</strong> {{ ordem.comentario_tecnico|default:"—" }}</td>
+        </tr>
+    </table>
+
+    <!-- ====== ASSINATURAS ====== -->
+    <table class="assinatura-tabela">
+        <tr>
+            <td>
+                <hr>
+                <p>Assinatura Técnico</p>
+            </td>
+            <td>
+                <hr>
+                <p>Assinatura Usuário</p>
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

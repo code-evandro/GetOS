@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<title>Menu Principal - GetOS</title>
+    
+</head>
+<body>
+    <div class="login-container">
+        <div id="logo-container">
+            <img id="logo" src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
+        </div>
+
+        <h1>Menu Principal</h1>
+
+        <!-- Ordem de Serviço -->
+        <button class="menu-btn" onclick="toggleSubMenu('submenu-os')">Ordem de Serviço</button>
+        <div id="submenu-os" class="submenu">
+            <a href="{% url 'abrir_os' %}" class="menu-btn">Abrir OS</a>
+            <a href="{% url 'visualizar_os' %}" class="menu-btn">Visualizar OS</a>
+        </div>
+
+        <!-- Cadastro de Servidores -->
+        <button class="menu-btn" onclick="toggleSubMenu('submenu-servidores')">Cadastro de Servidores</button>
+        <div id="submenu-servidores" class="submenu">
+            <a href="{% url 'cad_servidor' %}" class="menu-btn">Cadastrar Servidor</a>
+            <a href="{% url 'listar_servidores' %}" class="menu-btn">Listar Servidores</a>
+        </div>
+
+        <!-- Cadastro de Setores -->
+        <button class="menu-btn" onclick="toggleSubMenu('submenu-setores')">Cadastro de Setores</button>
+        <div id="submenu-setores" class="submenu">
+            <a href="{% url 'cad_setor' %}" class="menu-btn">Cadastrar Setor</a>
+            <a href="{% url 'listar_setores' %}" class="menu-btn">Listar Setores</a>
+        </div>
+
+        <!-- Dashboard -->
+        <button class="menu-btn" onclick="window.location.href='{% url 'dashboard' %}'">Dashboard</button>
+
+        <!-- Sair -->
+        <button class="menu-btn logout-btn" onclick="window.location.href='{% url 'logout_redirect' %}'">Sair</button>
+    </div>
+
+    <script>
+        function toggleSubMenu(id) {
+            const allSubmenus = document.querySelectorAll('.submenu');
+            allSubmenus.forEach(sub => {
+                if (sub.id !== id) {
+                    sub.style.display = 'none';
+                }
+            });
+
+            const submenu = document.getElementById(id);
+            submenu.style.display = submenu.style.display === 'flex' ? 'none' : 'flex';
+        }
+    </script>
+</body>
+</html>

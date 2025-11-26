@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<title>Editar Setor - GetOS</title>
+    
+</head>
+<body>
+    <div class="form-container">
+        <div id="logo-container">
+            <img id="logo" src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
+        </div>
+
+        <h1>Editar Setor</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "success" %}
+                    <div class="success-msg">{{ message }}</div>
+                {% else %}
+                    <div class="error-msg">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+		<label for="id_nome">Nome</label>
+		{{ form.nome }}
+		{% if form.nome.errors %}<div class="error-msg">{{ form.nome.errors|striptags }}</div>{% endif %}
+
+		<label for="id_sigla">Sigla</label>
+		{{ form.sigla }}
+		{% if form.sigla.errors %}<div class="error-msg">{{ form.sigla.errors|striptags }}</div>{% endif %}
+
+		<label for="id_secretaria">Secretaria</label>
+		{{ form.secretaria }}
+		{% if form.secretaria.errors %}<div class="error-msg">{{ form.secretaria.errors|striptags }}</div>{% endif %}
+
+		<label for="id_ramal">Ramal</label>
+		{{ form.ramal }}
+		{% if form.ramal.errors %}<div class="error-msg">{{ form.ramal.errors|striptags }}</div>{% endif %}
+
+            <button type="submit" class="submit-btn">Salvar Alterações</button>
+        </form>
+    </div>
+</body>
+</html>

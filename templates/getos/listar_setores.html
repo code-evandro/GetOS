@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<title>Setores Cadastrados - GetOS</title>
+    
+</head>
+<body>
+    <div class="container">
+
+        <div class="top-links">
+            <a href="{% url 'menu' %}">Menu Principal</a>
+            <a href="{% url 'logout_redirect' %}">Sair</a>
+        </div>
+
+        <div class="logo-container">
+            <img src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
+        </div>
+
+        <h2>Setores Cadastrados</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Sigla</th>
+                    <th>Secretaria</th>
+                    <th>Ramal</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for setor in setores %}
+                <tr>
+                    <td>{{ setor.nome }}</td>
+                    <td>{{ setor.sigla }}</td>
+                    <td>{{ setor.secretaria }}</td>
+                    <td>{{ setor.ramal }}</td>
+                    <td>
+                        <a href="{% url 'editar_setor' setor.id %}" class="btn">Editar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5">Nenhum setor cadastrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

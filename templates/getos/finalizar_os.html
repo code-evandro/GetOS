@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<title>Finalizar Ordem de Serviço - GetOS</title>
+    
+</head>
+<body>
+    <div class="form-container">
+
+        <div class="top-links">
+            <a href="{% url 'menu' %}">Menu Principal</a>
+            <a href="{% url 'logout_redirect' %}">Sair</a>
+        </div>
+
+        <div id="logo-container">
+            <img id="logo" src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
+        </div>
+
+        <h2>Finalizar Ordem de Serviço</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="feedback">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>Servidor</label>
+            <div class="readonly-field">{{ ordem.servidor }}</div>
+
+            <label>Setor</label>
+            <div class="readonly-field">{{ ordem.setor }}</div>
+
+            <label>Tipo</label>
+            <div class="readonly-field">{{ ordem.tipo }}</div>
+
+            <label>Técnico</label>
+            <div class="readonly-field">{{ ordem.tecnico }}</div>
+
+            <label>Data</label>
+            <div class="readonly-field">{{ ordem.data }}</div>
+
+            <label>Relato do Usuário</label>
+            <div class="readonly-field">{{ ordem.relato }}</div>
+
+            <label for="comentario_tecnico">Relato do Técnico</label>
+            {{ form.comentario_tecnico }}
+            {{ form.comentario_tecnico.errors }}
+
+            <button type="submit">Finalizar OS</button>
+        </form>
+    </div>
+</body>
+</html>

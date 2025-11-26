@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Editar Servidor - GetOS</title>
+</head>
+<body>
+    <div class="form-container">
+        <div id="logo-container">
+            <img id="logo" src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
+        </div>
+
+        <h1>Editar Servidor</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == "success" %}
+                    <div class="alert alert-success">{{ message }}</div>
+                {% else %}
+                    <div class="alert alert-error">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label for="id_nome">Nome</label>
+            {{ form.nome }}
+
+            <label for="id_matricula">Matrícula</label>
+            {{ form.matricula }}
+
+            <label for="id_setor">Setor</label>
+            {{ form.setor }}
+
+            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        </form>
+    </div>
+</body>
+</html>

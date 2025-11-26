@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<title>Abrir Ordem de Serviço - GetOS</title>
+
+
+</head>
+<body>
+<div class="form-container">
+
+    <div class="top-links">
+        <a href="{% url 'menu' %}">Menu Principal</a>
+        <a href="{% url 'logout_redirect' %}">Sair</a>
+    </div>
+
+    <div id="logo-container">
+        <img id="logo" src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
+    </div>
+
+    <h2>Abrir Ordem de Serviço</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="feedback">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label for="servidor">Servidor</label>
+        {{ form.servidor }}
+        {{ form.servidor.errors }}
+
+        <label for="setor">Setor</label>
+        <input type="text" id="setor_display" class="form-input" readonly>
+
+        <label for="ramal">Ramal</label>
+        <input type="text" id="ramal_display" class="form-input" readonly>
+
+        <label for="tipo">Tipo</label>
+        {{ form.tipo }}
+        {{ form.tipo.errors }}
+
+        <label for="tecnico">Técnico</label>
+        {{ form.tecnico }}
+        {{ form.tecnico.errors }}
+
+        <label for="data">Data</label>
+        {{ form.data }}
+        {{ form.data.errors }}
+
+        <label for="relato">Relato</label>
+        {{ form.relato }}
+        {{ form.relato.errors }}
+
+        <button type="submit">Salvar Ordem</button>
+    </form>
+</div>
+
+<script>
+    const servidorDados = {
+        {% for servidor in form.fields.servidor.queryset %}
+            "{{ servidor.id }}": {
+                "setor": "{{ servidor.setor.nome|escapejs }}",
+                "ramal": "{{ servidor.setor.ramal|escapejs }}"
+            },
+        {% endfor %}
+    };
+
+    const servidorSelect = document.getElementById("id_servidor");
+    const setorDisplay = document.getElementById("setor_display");
+    const ramalDisplay = document.getElementById("ramal_display");
+
+    function atualizarCampos() {
+        const dados = servidorDados[servidorSelect.value];
+        if (dados) {
+            setorDisplay.value = dados.setor;
+            ramalDisplay.value = dados.ramal;
+        } else {
+            setorDisplay.value = "";
+            ramalDisplay.value = "";
+        }
+    }
+
+    servidorSelect.addEventListener("change", atualizarCampos);
+    window.addEventListener("load", atualizarCampos);
+</script>
+</body>
+</html>

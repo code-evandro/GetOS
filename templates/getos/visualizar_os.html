@@ -1,0 +1,130 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Ordens de Serviço - GetOS</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="container">
+
+    <div class="top-links">
+        <a href="{% url 'menu' %}">Menu Principal</a>
+        <a href="{% url 'logout_redirect' %}">Sair</a>
+    </div>
+
+    <div class="logo-container">
+        <img src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
+    </div>
+
+    <h2>Ordens de Serviço</h2>
+
+    <!-- 🔍 FILTROS -->
+    <form method="GET" class="filter-bar">
+        <div class="field">
+            <input type="text" name="data_inicio"
+                   placeholder="Data Início"
+                   value="{{ request.GET.data_inicio }}"
+                   onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
+        </div>
+
+        <div class="field">
+            <input type="text" name="data_fim"
+                   placeholder="Data Fim"
+                   value="{{ request.GET.data_fim }}"
+                   onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
+        </div>
+
+        <div class="field">
+            <select name="tecnico">
+                <option value="">Técnico</option>
+                {% for tecnico in tecnicos %}
+                    <option value="{{ tecnico.id }}" {% if request.GET.tecnico == tecnico.id|stringformat:"s" %}selected{% endif %}>
+                        {{ tecnico.user.username }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="field">
+            <select name="setor">
+                <option value="">Setor</option>
+                {% for setor in setores %}
+                    <option value="{{ setor.id }}" {% if request.GET.setor == setor.id|stringformat:"s" %}selected{% endif %}>
+                        {{ setor.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="field">
+            <select name="servidor">
+                <option value="">Servidor</option>
+                {% for servidor in servidores %}
+                    <option value="{{ servidor.id }}" {% if request.GET.servidor == servidor.id|stringformat:"s" %}selected{% endif %}>
+                        {{ servidor.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="field">
+            <select name="situacao">
+                <option value="">Situação</option>
+                <option value="aberta" {% if request.GET.situacao == 'aberta' %}selected{% endif %}>Aberta</option>
+                <option value="finalizada" {% if request.GET.situacao == 'finalizada' %}selected{% endif %}>Finalizada</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-filter">Filtrar</button>
+    </form>
+
+    <!-- TABELA -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Servidor</th>
+                <th>Setor</th>
+                <th>Tipo</th>
+                <th>Técnico</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ordem in ordens %}
+            <tr>
+                <td data-label="ID">{{ ordem.id }}</td>
+                <td data-label="Servidor">{{ ordem.servidor.nome }}</td>
+                <td data-label="Setor">{{ ordem.setor.nome }}</td>
+                <td data-label="Tipo">{{ ordem.tipo }}</td>
+                <td data-label="Técnico">{{ ordem.tecnico.user.username }}</td>
+                <td data-label="Data">{{ ordem.data|date:"d/m/Y" }}</td>
+                <td data-label="Status">
+                    {% if ordem.finalizada %}
+                        <span class="finalizada">Finalizada</span>
+                    {% else %}
+                        <span class="nao-finalizada">Aberta</span>
+                    {% endif %}
+                </td>
+                <td data-label="Ações">
+                    <div class="acoes-btns">
+                        {% if not ordem.finalizada %}
+                            <a href="{% url 'finalizar_os' ordem.id %}" class="btn btn-warning" title="Finalizar OS">✓</a>
+                        {% endif %}
+                        <a href="{% url 'gerar_pdf_os' ordem.id %}" class="btn btn-secondary" target="_blank">PDF</a>
+                    </div>
+                </td>
+            </tr>
+        {% empty %}
+            <tr><td colspan="8">Nenhuma OS cadastrada.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
