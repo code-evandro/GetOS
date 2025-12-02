@@ -6,8 +6,8 @@ class Setor(models.Model):
     secretaria = models.CharField(max_length=100)
     ramal = models.CharField(
         max_length=10,
-        blank=True,  # permite campo vazio no formulário
-        null=True    # permite valor NULL no banco
+        blank=True,  
+        null=True    
     )
 
     def __str__(self):

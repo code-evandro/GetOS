@@ -1,6 +1,6 @@
 
 /* ===========================
-   RESET BÁSICO
+   RESET
 =========================== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -28,7 +28,7 @@ body {
     border-radius: 16px;
     padding: 20px 30px;
     width: 100%;
-    max-width: 850px;
+    max-width: 960px;
 }
 
 .login-container { max-width: 380px; padding: 40px; text-align: center; }
@@ -72,7 +72,6 @@ body {
 /* ===========================
    FORMULÁRIOS
 =========================== */
-/* Escopo vertical apenas nos forms de páginas */
 .form-container form { display: flex; flex-direction: column; gap: 10px; }
 label { display: block; margin-bottom: 6px; font-size: 16px; }
 
@@ -107,7 +106,7 @@ select option {
 
 textarea { min-height: 100px; resize: vertical; }
 
-/* Readonly display boxes (ex.: finalizar_os) */
+
 .readonly-field {
     background-color: rgba(255, 255, 255, 0.1);
     padding: 10px;
@@ -281,14 +280,14 @@ canvas { width: 100%; max-height: 240px; }
 .acoes-btns {
     display: flex;
     align-items: center;
-    gap: 10px;                 /* espaço entre os botões */
+    gap: 10px;                 
 }
 
 .acoes-btns .btn {
-    width: auto;               /* não esticar */
-    padding: 8px 12px;         /* mais compacto */
+    width: auto;               
+    padding: 8px 12px;         
     line-height: 1;
-    white-space: nowrap;       /* evita quebrar o texto */
+    white-space: nowrap;       
 }
 
 /* ajustes finos por variante (opcional) */
@@ -304,4 +303,16 @@ td[data-label="Ações"], th:last-child {
 @media (max-width: 960px) {
     .acoes-btns { flex-wrap: wrap; }
     td[data-label="Ações"], th:last-child { width: auto; }
+}
+
+/* Botão desabilitado (OS finalizada) */
+.btn-disabled {
+    background-color: #777 !important;
+    color: #ccc !important;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: not-allowed;
+    opacity: 0.6;
+    text-decoration: none;
+    pointer-events: none; 
 }

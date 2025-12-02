@@ -1,5 +1,5 @@
-from django.conf import settings  # ← necessário para acessar BASE_DIR
-import os  # ← para montar o caminho do logo
+from django.conf import settings 
+import os  
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
@@ -39,7 +39,7 @@ def visualizar_os(request):
     elif situacao == 'finalizada':
         ordens = ordens.filter(finalizada=True)
 
-    # Listas para popular selects no template
+    
     tecnicos = Tecnico.objects.select_related('user').order_by('user__username')
     servidores = Servidor.objects.all().order_by('nome')
     setores = Setor.objects.all().order_by('nome')
@@ -59,10 +59,10 @@ def cadastrar_ordem(request):
             ordem.setor = ordem.servidor.setor
             ordem.ramal = ordem.servidor.setor.ramal
             ordem.save()
-            messages.success(request, '✅ Ordem de Serviço cadastrada com sucesso!')
+            messages.success(request, 'Ordem de Serviço cadastrada com sucesso!')
             return redirect('abrir_os')
         else:
-            messages.error(request, '❌ Corrija os erros antes de salvar.')
+            messages.error(request, 'Corrija os erros antes de salvar.')
     else:
         form = OrdemDeServicoForm()
 
@@ -76,10 +76,10 @@ def finalizar_os(request, os_id):
             ordem = form.save(commit=False)
             ordem.finalizada = True
             ordem.save()
-            messages.success(request, '✅ OS finalizada com sucesso!')
+            messages.success(request, 'OS finalizada com sucesso!')
             return redirect('visualizar_os')
         else:
-            messages.error(request, '❌ Corrija os erros antes de finalizar.')
+            messages.error(request, 'Corrija os erros antes de finalizar.')
     else:
         form = FinalizarOSForm(instance=ordem)
 
@@ -89,7 +89,7 @@ def gerar_pdf_os(request, id):
     ordem = get_object_or_404(OrdemDeServico, id=id)
     template = get_template('getos/pdf_ordem.html')
 
-    # ✅ Correção: usar BASE_DIR para caminho da logo (não STATIC_ROOT)
+    
     logo_path = os.path.join(settings.BASE_DIR, 'static', 'imgs', 'logo.png')
 
     html = template.render({

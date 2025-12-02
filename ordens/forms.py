@@ -18,7 +18,7 @@ class OrdemDeServicoForm(forms.ModelForm):
         self.fields['tecnico'].queryset = Tecnico.objects.select_related('user').order_by('user__username')
         self.fields['servidor'].queryset = Servidor.objects.all().order_by('nome')
 
-# Novo formulário para finalização da OS
+
 class FinalizarOSForm(forms.ModelForm):
     class Meta:
         model = OrdemDeServico
