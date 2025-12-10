@@ -1,133 +1,163 @@
+{% extends "getos/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Ordens de Serviço - GetOS</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
-<div class="container">
 
-    <div class="top-links">
-        <a href="{% url 'menu' %}">Menu Principal</a>
-        <a href="{% url 'logout_redirect' %}">Sair</a>
+{% block title %}Ordens de Serviço - GetOS{% endblock %}
+{% block nav_visualizar_os_active %}active{% endblock %}
+
+{% block content %}
+
+<div class="card-dark mb-4">
+    <div class="page-title">Ordens de Serviço</div>
+    <div class="page-subtitle">
+        Utilize os filtros abaixo para consultar OS por período, setor, servidor, técnico e situação.
     </div>
+</div>
 
-    <div class="logo-container">
-        <img src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
-    </div>
+<!-- FILTROS -->
+<div class="card-dark mb-4">
+    <form method="GET" class="row g-3">
 
-    <h2>Ordens de Serviço</h2>
-
-    <!-- 🔍 FILTROS -->
-    <form method="GET" class="filter-bar">
-        <div class="field">
-            <input type="text" name="data_inicio"
-                   placeholder="Data Início"
-                   value="{{ request.GET.data_inicio }}"
-                   onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
+        <div class="col-md-3">
+            <label class="form-label">Data Início</label>
+            <input type="date" name="data_inicio" class="form-input"
+                   value="{{ request.GET.data_inicio }}">
         </div>
 
-        <div class="field">
-            <input type="text" name="data_fim"
-                   placeholder="Data Fim"
-                   value="{{ request.GET.data_fim }}"
-                   onfocus="this.type='date'" onblur="if(!this.value)this.type='text'">
+        <div class="col-md-3">
+            <label class="form-label">Data Fim</label>
+            <input type="date" name="data_fim" class="form-input"
+                   value="{{ request.GET.data_fim }}">
         </div>
 
-        <div class="field">
-            <select name="tecnico">
-                <option value="">Técnico</option>
+        <div class="col-md-2">
+            <label class="form-label">Técnico</label>
+            <select name="tecnico" class="form-input">
+                <option value="">Todos</option>
                 {% for tecnico in tecnicos %}
-                    <option value="{{ tecnico.id }}" {% if request.GET.tecnico == tecnico.id|stringformat:"s" %}selected{% endif %}>
+                    <option value="{{ tecnico.id }}" 
+                        {% if request.GET.tecnico == tecnico.id|stringformat:"s" %}selected{% endif %}>
                         {{ tecnico.user.username }}
                     </option>
                 {% endfor %}
             </select>
         </div>
 
-        <div class="field">
-            <select name="setor">
-                <option value="">Setor</option>
+        <div class="col-md-2">
+            <label class="form-label">Setor</label>
+            <select name="setor" class="form-input">
+                <option value="">Todos</option>
                 {% for setor in setores %}
-                    <option value="{{ setor.id }}" {% if request.GET.setor == setor.id|stringformat:"s" %}selected{% endif %}>
+                    <option value="{{ setor.id }}"
+                            {% if request.GET.setor == setor.id|stringformat:"s" %}selected{% endif %}>
                         {{ setor.nome }}
                     </option>
                 {% endfor %}
             </select>
         </div>
 
-        <div class="field">
-            <select name="servidor">
-                <option value="">Servidor</option>
+        <div class="col-md-2">
+            <label class="form-label">Servidor</label>
+            <select name="servidor" class="form-input">
+                <option value="">Todos</option>
                 {% for servidor in servidores %}
-                    <option value="{{ servidor.id }}" {% if request.GET.servidor == servidor.id|stringformat:"s" %}selected{% endif %}>
+                    <option value="{{ servidor.id }}"
+                        {% if request.GET.servidor == servidor.id|stringformat:"s" %}selected{% endif %}>
                         {{ servidor.nome }}
                     </option>
                 {% endfor %}
             </select>
         </div>
 
-        <div class="field">
-            <select name="situacao">
-                <option value="">Situação</option>
+        <div class="col-md-2">
+            <label class="form-label">Situação</label>
+            <select name="situacao" class="form-input">
+                <option value="">Todas</option>
                 <option value="aberta" {% if request.GET.situacao == 'aberta' %}selected{% endif %}>Aberta</option>
                 <option value="finalizada" {% if request.GET.situacao == 'finalizada' %}selected{% endif %}>Finalizada</option>
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary btn-filter">Filtrar</button>
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-accent w-100">Filtrar</button>
+        </div>
+
     </form>
-
-    <!-- TABELA -->
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Servidor</th>
-                <th>Setor</th>
-                <th>Tipo</th>
-                <th>Técnico</th>
-                <th>Data</th>
-                <th>Status</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for ordem in ordens %}
-            <tr>
-                <td data-label="ID">{{ ordem.id }}</td>
-                <td data-label="Servidor">{{ ordem.servidor.nome }}</td>
-                <td data-label="Setor">{{ ordem.setor.nome }}</td>
-                <td data-label="Tipo">{{ ordem.tipo }}</td>
-                <td data-label="Técnico">{{ ordem.tecnico.user.username }}</td>
-                <td data-label="Data">{{ ordem.data|date:"d/m/Y" }}</td>
-                <td data-label="Status">
-                    {% if ordem.finalizada %}
-                        <span class="finalizada">Finalizada</span>
-                    {% else %}
-                        <span class="nao-finalizada">Aberta</span>
-                    {% endif %}
-                </td>
-                <td data-label="Ações">
-                    <div class="acoes-btns">
-                        <a href="{% url 'gerar_pdf_os' ordem.id %}" class="btn btn-secondary" target="_blank">PDF</a>
-
-                        {% if ordem.finalizada %}
-                            <a class="btn btn-disabled" title="OS já finalizada">✓</a>
-                        {% else %}
-                            <a href="{% url 'finalizar_os' ordem.id %}" class="btn btn-warning" title="Finalizar OS">✓</a>
-                        {% endif %}
-
-                    </div>
-                </td>
-            </tr>
-        {% empty %}
-            <tr><td colspan="8">Nenhuma OS cadastrada.</td></tr>
-        {% endfor %}
-        </tbody>
-    </table>
 </div>
-</body>
-</html>
+
+<!-- TABELA -->
+<div class="card-dark p-0">
+    <div class="table-responsive">
+        <table class="table table-dark table-striped align-middle mb-0">
+            <thead class="table-head-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Servidor</th>
+                    <th>Setor</th>
+                    <th>Tipo</th>
+                    <th>Técnico</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th style="width: 150px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for ordem in ordens %}
+                <tr>
+                    <td>{{ ordem.id }}</td>
+                    <td>{{ ordem.servidor.nome }}</td>
+                    <td>{{ ordem.setor.nome }}</td>
+                    <td>{{ ordem.tipo }}</td>
+                    <td>{{ ordem.tecnico.user.username }}</td>
+                    <td>{{ ordem.data|date:"d/m/Y" }}</td>
+
+                    <!-- STATUS -->
+                    <td>
+                        {% if ordem.finalizada %}
+                            <span class="badge-os bg-dark border border-warning text-warning text-center">
+                                Finalizada
+                            </span>
+                        {% else %}
+                            <span class="badge-os bg-warning text-dark text-center">
+                                Aberta
+                            </span>
+                        {% endif %}
+                    </td>
+
+                    <!-- AÇÕES -->
+                    <td>
+                        <div class="d-flex gap-2">
+
+                            {% if ordem.finalizada %}
+                                <!-- Ícone de check desabilitado -->
+                                <span class="btn-os-disabled" title="OS já finalizada">✓</span>
+                            {% else %}
+                                <!-- Mesmo ícone, mas clicável e dourado -->
+                                <a href="{% url 'finalizar_os' ordem.id %}" 
+                                   class="btn-os btn-accent text-dark text-decoration-none text-center"
+                                   title="Finalizar OS">
+                                    ✓
+                                </a>
+                            {% endif %}
+
+                            <!-- PDF -->
+                            <a href="{% url 'gerar_pdf_os' ordem.id %}" 
+                               class="btn-os btn-ghost text-decoration-none text-center"
+                               target="_blank"
+                               title="Gerar PDF">
+                                PDF
+                            </a>
+
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="8" class="text-center py-4">Nenhuma OS encontrada.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

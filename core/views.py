@@ -10,9 +10,18 @@ from ordens.models import OrdemDeServico
 from setores.models import Setor
 from servidores.models import Servidor
 
+
 @login_required
 def menu(request):
     return render(request, 'getos/menu.html')
+
+
+def teste_layout(request):
+    """
+    View apenas para testar o novo layout com sidebar (getos/base.html).
+    """
+    return render(request, 'getos/teste_layout.html')
+
 
 @login_required
 def dashboard(request):
@@ -28,7 +37,6 @@ def dashboard(request):
     os_por_setor = OrdemDeServico.objects.values('setor__nome').annotate(qtd=Count('id')).order_by('-qtd')[:5]
     os_por_tecnico = OrdemDeServico.objects.values('tecnico__user__username').annotate(qtd=Count('id')).order_by('-qtd')[:5]
 
-    # Gráfico de OS por mês (últimos 12 meses)
     os_por_mes = OrdemDeServico.objects.annotate(
         mes=TruncMonth('data')
     ).values('mes').annotate(qtd=Count('id')).order_by('mes')
@@ -53,7 +61,7 @@ def dashboard(request):
 
     return render(request, 'getos/dashboard.html', context)
 
-# 🔓 View para logout com redirecionamento
+
 def logout_redirect(request):
     logout(request)
     return redirect('login')

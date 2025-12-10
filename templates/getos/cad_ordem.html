@@ -1,67 +1,92 @@
+{% extends "getos/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-<title>Abrir Ordem de Serviço - GetOS</title>
 
+{% block title %}Abrir Ordem de Serviço - GetOS{% endblock %}
+{% block nav_abrir_os_active %}active{% endblock %}
 
-</head>
-<body>
-<div class="form-container">
+{% block content %}
 
-    <div class="top-links">
-        <a href="{% url 'menu' %}">Menu Principal</a>
-        <a href="{% url 'logout_redirect' %}">Sair</a>
+<div class="card-dark mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <div class="page-title">Abrir Ordem de Serviço</div>
+            <div class="page-subtitle">
+                Preencha os dados abaixo para registrar uma nova OS.
+            </div>
+        </div>
     </div>
+</div>
 
-    <div id="logo-container">
-        <img id="logo" src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
-    </div>
-
-    <h2>Abrir Ordem de Serviço</h2>
-
+<div class="card-dark">
     {% if messages %}
-        {% for message in messages %}
-            <div class="feedback">{{ message }}</div>
-        {% endfor %}
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="feedback">{{ message }}</div>
+            {% endfor %}
+        </div>
     {% endif %}
 
-    <form method="POST">
+    <form method="POST" class="row g-3">
         {% csrf_token %}
 
-        <label for="servidor">Servidor</label>
-        {{ form.servidor }}
-        {{ form.servidor.errors }}
+        <!-- Servidor -->
+        <div class="col-md-6">
+            <label for="id_servidor" class="form-label">Servidor</label>
+            {{ form.servidor }}
+            {{ form.servidor.errors }}
+        </div>
 
-        <label for="setor">Setor</label>
-        <input type="text" id="setor_display" class="form-input" readonly>
+        <!-- Setor (somente leitura, preenchido via JS) -->
+        <div class="col-md-3">
+            <label for="setor_display" class="form-label">Setor</label>
+            <input type="text" id="setor_display" class="form-input" readonly>
+        </div>
 
-        <label for="ramal">Ramal</label>
-        <input type="text" id="ramal_display" class="form-input" readonly>
+        <!-- Ramal (somente leitura, preenchido via JS) -->
+        <div class="col-md-3">
+            <label for="ramal_display" class="form-label">Ramal</label>
+            <input type="text" id="ramal_display" class="form-input" readonly>
+        </div>
 
-        <label for="tipo">Tipo</label>
-        {{ form.tipo }}
-        {{ form.tipo.errors }}
+        <!-- Tipo -->
+        <div class="col-md-4">
+            <label for="id_tipo" class="form-label">Tipo</label>
+            {{ form.tipo }}
+            {{ form.tipo.errors }}
+        </div>
 
-        <label for="tecnico">Técnico</label>
-        {{ form.tecnico }}
-        {{ form.tecnico.errors }}
+        <!-- Técnico -->
+        <div class="col-md-4">
+            <label for="id_tecnico" class="form-label">Técnico</label>
+            {{ form.tecnico }}
+            {{ form.tecnico.errors }}
+        </div>
 
-        <label for="data">Data</label>
-        {{ form.data }}
-        {{ form.data.errors }}
+        <!-- Data -->
+        <div class="col-md-4">
+            <label for="id_data" class="form-label">Data</label>
+            {{ form.data }}
+            {{ form.data.errors }}
+        </div>
 
-        <label for="relato">Relato</label>
-        {{ form.relato }}
-        {{ form.relato.errors }}
+        <!-- Relato -->
+        <div class="col-12">
+            <label for="id_relato" class="form-label">Relato</label>
+            {{ form.relato }}
+            {{ form.relato.errors }}
+        </div>
 
-        <button type="submit">Salvar Ordem</button>
+        <div class="col-12 mt-2">
+            <button type="submit" class="btn-accent w-100">
+                Salvar Ordem
+            </button>
+        </div>
     </form>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
 <script>
     const servidorDados = {
         {% for servidor in form.fields.servidor.queryset %}
@@ -87,8 +112,9 @@
         }
     }
 
-    servidorSelect.addEventListener("change", atualizarCampos);
-    window.addEventListener("load", atualizarCampos);
+    if (servidorSelect) {
+        servidorSelect.addEventListener("change", atualizarCampos);
+        window.addEventListener("load", atualizarCampos);
+    }
 </script>
-</body>
-</html>
+{% endblock %}
