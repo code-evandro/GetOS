@@ -1,60 +1,81 @@
+{% extends "getos/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-<title>Finalizar Ordem de Serviço - GetOS</title>
-    
-</head>
-<body>
-    <div class="form-container">
+{% block title %}Finalizar Ordem de Serviço - GetOS{% endblock %}
+{% block menu_visualizar_os_active %}active{% endblock %}
 
-        <div class="top-links">
-            <a href="{% url 'menu' %}">Menu Principal</a>
-            <a href="{% url 'logout_redirect' %}">Sair</a>
+{% block content %}
+<div class="card-dark" style="max-width:900px; margin: 0 auto;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <div class="page-title">Finalizar Ordem de Serviço</div>
+            <div class="page-subtitle">Revise os dados abaixo e adicione o relato final do técnico.</div>
+        </div>
+        <div>
+            <a href="{% url 'visualizar_os' %}" class="btn btn-ghost btn-sm">Voltar</a>
+        </div>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="feedback">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" class="mt-2">
+        {% csrf_token %}
+
+        <div class="row g-3 mb-2">
+            <div class="col-md-6">
+                <label class="form-label">Servidor</label>
+                <div class="readonly-field">{{ ordem.servidor }}</div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Setor</label>
+                <div class="readonly-field">{{ ordem.setor }}</div>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Tipo</label>
+                <div class="readonly-field">{{ ordem.tipo }}</div>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Técnico</label>
+                <div class="readonly-field">
+                    {% if ordem.tecnico %}
+                        {% if ordem.tecnico.username %}
+                            {{ ordem.tecnico.username }}
+                        {% else %}
+                            {{ ordem.tecnico }}
+                        {% endif %}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Data</label>
+                <div class="readonly-field">{{ ordem.data|date:"d/m/Y" }}</div>
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Relato do Usuário</label>
+                <div class="readonly-field" style="white-space:pre-wrap;">{{ ordem.relato }}</div>
+            </div>
         </div>
 
-        <div id="logo-container">
-            <img id="logo" src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
-        </div>
-
-        <h2>Finalizar Ordem de Serviço</h2>
-
-        {% if messages %}
-            {% for message in messages %}
-                <div class="feedback">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-
-        <form method="POST">
-            {% csrf_token %}
-
-            <label>Servidor</label>
-            <div class="readonly-field">{{ ordem.servidor }}</div>
-
-            <label>Setor</label>
-            <div class="readonly-field">{{ ordem.setor }}</div>
-
-            <label>Tipo</label>
-            <div class="readonly-field">{{ ordem.tipo }}</div>
-
-            <label>Técnico</label>
-            <div class="readonly-field">{{ ordem.tecnico }}</div>
-
-            <label>Data</label>
-            <div class="readonly-field">{{ ordem.data }}</div>
-
-            <label>Relato do Usuário</label>
-            <div class="readonly-field">{{ ordem.relato }}</div>
-
-            <label for="comentario_tecnico">Relato do Técnico</label>
+        <div class="mb-3">
+            <label for="id_comentario_tecnico" class="form-label">Relato do Técnico</label>
             {{ form.comentario_tecnico }}
             {{ form.comentario_tecnico.errors }}
+        </div>
 
-            <button type="submit">Finalizar OS</button>
-        </form>
-    </div>
-</body>
-</html>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-accent">Finalizar OS</button>
+            <a href="{% url 'visualizar_os' %}" class="btn btn-ghost">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

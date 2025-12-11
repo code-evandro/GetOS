@@ -9,7 +9,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-# Apps do Django + seus apps
+# Apps do Django
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -18,7 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Apps do sistema GetOS
+    # Apps do GetOS
     'core',
     'setores',
     'servidores',
@@ -45,7 +45,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # <- ISSO É O IMPORTANTE
+        'DIRS': [BASE_DIR / 'templates'], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -99,7 +99,7 @@ LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/menu/'
 LOGOUT_REDIRECT_URL = '/login/'
 
-# Mensagens do Django (caso queira mostrar com CSS futuramente)
+
 MESSAGE_TAGS = {
     messages.ERROR: 'msg-error',
 }

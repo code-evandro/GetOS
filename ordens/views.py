@@ -39,7 +39,8 @@ def visualizar_os(request):
     elif situacao == 'finalizada':
         ordens = ordens.filter(finalizada=True)
 
-    
+    ordens = ordens.order_by('-data', '-id')
+
     tecnicos = Tecnico.objects.select_related('user').order_by('user__username')
     servidores = Servidor.objects.all().order_by('nome')
     setores = Setor.objects.all().order_by('nome')
@@ -89,7 +90,6 @@ def gerar_pdf_os(request, id):
     ordem = get_object_or_404(OrdemDeServico, id=id)
     template = get_template('getos/pdf_ordem.html')
 
-    
     logo_path = os.path.join(settings.BASE_DIR, 'static', 'imgs', 'logo.png')
 
     html = template.render({
