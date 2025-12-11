@@ -3,6 +3,15 @@ from django.contrib import messages
 from .models import Setor
 from .forms import SetorForm
 
+
+def teste_layout(request):
+    """
+    View apenas para testar o novo layout com sidebar (getos/base.html).
+    Não interfere nas telas reais do sistema.
+    """
+    return render(request, 'getos/teste_layout.html')
+
+
 def cadastrar_setor(request):
     form = SetorForm(request.POST or None)
 

@@ -1,141 +1,191 @@
+{% extends "getos/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-<title>Dashboard - GetOS</title>
-    
-</head>
-<body>
-    <div class="container">
 
-        <div class="top-links">
-            <a href="{% url 'menu' %}">Menu Principal</a>
-            <a href="{% url 'logout_redirect' %}">Sair</a>
+{% block title %}Dashboard - GetOS{% endblock %}
+{% block menu_dashboard_active %}active{% endblock %}
+
+{% block content %}
+
+<!-- HEADER DA DASHBOARD -->
+<div class="dashboard-header card-dark mb-4">
+    <div>
+        <div class="page-title mb-1">Painel de Desempenho</div>
+        <div class="page-subtitle">
+            Visão geral das Ordens de Serviço e da atuação do suporte de TI.
         </div>
+    </div>
+    <div class="dashboard-header-badges">
+        <span class="badge-pill">OS Totais: <strong>{{ total_os }}</strong></span>
+        <span class="badge-pill">Abertas: <strong>{{ os_abertas }}</strong></span>
+        <span class="badge-pill">Finalizadas: <strong>{{ os_finalizadas }}</strong></span>
+        <span class="badge-pill soft">Últimos 7 dias: <strong>{{ os_ultimos_dias|length }}</strong></span>
+    </div>
+</div>
 
-        <div class="logo-container">
-            <img src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
+<!-- KPIs PRINCIPAIS -->
+<div class="row g-3 mb-4 dashboard-kpis">
+
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+            <div class="kpi-label">Ordens Totais</div>
+            <div class="kpi-value">{{ total_os }}</div>
+            <div class="kpi-footer">Meta: 5000</div>
         </div>
-
-        <h1>Dashboard - GetOS</h1>
-
-        <div class="indicadores-grid">
-            <div class="card-indicador">
-                <h3>Ordens Totais</h3>
-                <div class="valor">{{ total_os }}</div>
-                <div class="meta">Meta: 5000</div>
-            </div>
-            <div class="card-indicador">
-                <h3>OS Abertas</h3>
-                <div class="valor">{{ os_abertas }}</div>
-                <div class="meta">Meta: 1500</div>
-            </div>
-            <div class="card-indicador">
-                <h3>OS Finalizadas</h3>
-                <div class="valor">{{ os_finalizadas }}</div>
-                <div class="meta">Meta: 3500</div>
-            </div>
-            <div class="card-indicador">
-                <h3>Últimos 7 dias</h3>
-                <div class="valor">{{ os_ultimos_dias|length }}</div>
-                <div class="meta">Meta: 100</div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>Gráfico de Ordens por Mês</h2>
-            <canvas id="graficoOS"></canvas>
-        </div>
-
-        <div class="card">
-            <h2>Ordens por Setor</h2>
-            <ul>
-                {% for item in os_por_setor %}
-                    <li class="linha">{{ item.setor__nome }} <span>{{ item.qtd }}</span></li>
-                {% empty %}
-                    <li>Nenhuma ordem registrada.</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <div class="card">
-            <h2>Ordens por Técnico</h2>
-            <ul>
-                {% for item in os_por_tecnico %}
-                    <li class="linha">{{ item.tecnico__user__username }} <span>{{ item.qtd }}</span></li>
-                {% empty %}
-                    <li>Nenhuma ordem registrada.</li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <div class="card">
-            <h2>Ordens Registradas nos Últimos 7 Dias</h2>
-            <ul>
-                {% for ordem in os_ultimos_dias %}
-                    <li class="linha">
-                        OS #{{ ordem.id }} - {{ ordem.servidor.nome }} ({{ ordem.setor.nome }})
-                        <span>{{ ordem.data|date:"d/m/Y" }}</span>
-                    </li>
-                {% empty %}
-                    <li>Nenhuma ordem recente.</li>
-                {% endfor %}
-            </ul>
-        </div>
-            <div class="card">
-            <h2>📄 Relatórios</h2>
-            <p style="font-size: 15px; color: #ccc; line-height: 1.6;">
-                Em breve você poderá gerar relatórios detalhados em PDF com filtros por setor, técnico ou período. Fique ligado!
-            </p>
-        </div>
-
     </div>
 
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+            <div class="kpi-label">OS Abertas</div>
+            <div class="kpi-value kpi-warning">{{ os_abertas }}</div>
+            <div class="kpi-footer">Monitorar fila atual</div>
+        </div>
+    </div>
 
-    <!-- Chart.js + script com dados reais -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const dados = {{ dados_grafico|safe }};
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+            <div class="kpi-label">OS Finalizadas</div>
+            <div class="kpi-value kpi-success">{{ os_finalizadas }}</div>
+            <div class="kpi-footer">Atendimentos concluídos</div>
+        </div>
+    </div>
 
-        const ctx = document.getElementById('graficoOS').getContext('2d');
-        const grafico = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: dados.labels,
-                datasets: [{
-                    label: 'Ordens por mês',
-                    data: dados.dados,
-                    fill: true,
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    borderColor: '#ffffff',
-                    tension: 0.4
-                }]
-            },
-            options: {
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#fff'
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: '#fff'
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: '#fff'
+    <div class="col-md-3 col-sm-6">
+        <div class="kpi-card">
+            <div class="kpi-label">Últimos 7 dias</div>
+            <div class="kpi-value">{{ os_ultimos_dias|length }}</div>
+            <div class="kpi-footer">Volume recente de OS</div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row g-3 mb-4">
+
+    <!-- GRÁFICO PRINCIPAL -->
+    <div class="col-lg-8">
+        <div class="card-dark p-3 h-100">
+            <div class="section-title mb-2">Evolução de OS por Mês</div>
+            <p class="section-subtitle">
+                Acompanhe a tendência de abertura de ordens de serviço ao longo do tempo.
+            </p>
+            <canvas id="graficoOS" height="120"></canvas>
+        </div>
+    </div>
+
+    <!-- RANKINGS -->
+    <div class="col-lg-4">
+        <div class="card-dark p-3 mb-3">
+            <div class="section-title mb-2">Top Setores por OS</div>
+            <ul class="ranking-list">
+                {% for item in os_por_setor %}
+                    <li>
+                        <div class="label">{{ item.setor__nome }}</div>
+                        <div class="value">{{ item.qtd }}</div>
+                    </li>
+                {% empty %}
+                    <li>Nenhuma ordem registrada.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card-dark p-3">
+            <div class="section-title mb-2">Top Técnicos por OS</div>
+            <ul class="ranking-list">
+                {% for item in os_por_tecnico %}
+                    <li>
+                        <div class="label">{{ item.tecnico__user__username }}</div>
+                        <div class="value">{{ item.qtd }}</div>
+                    </li>
+                {% empty %}
+                    <li>Nenhuma ordem registrada.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<!-- ÚLTIMAS ORDENS (TIMELINE) -->
+<div class="card-dark p-3">
+    <div class="section-title mb-2">Timeline · Últimos 7 dias</div>
+    <p class="section-subtitle">
+        Ordens mais recentes registradas no sistema.
+    </p>
+
+    <div class="timeline">
+        {% for ordem in os_ultimos_dias %}
+            <div class="timeline-item">
+                <div class="dot"></div>
+                <div class="content">
+                    <div class="title">
+                        OS #{{ ordem.id }} · {{ ordem.servidor.nome }} ({{ ordem.setor.nome }})
+                    </div>
+                    <div class="meta">
+                        {{ ordem.data|date:"d/m/Y" }} — Tipo: {{ ordem.tipo }} · Técnico: {{ ordem.tecnico.user.username }}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-muted mb-0">Nenhuma ordem recente.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const dados = {{ dados_grafico|safe }};
+
+    const ctx = document.getElementById('graficoOS').getContext('2d');
+    const grafico = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dados.labels,
+            datasets: [{
+                label: 'Ordens por mês',
+                data: dados.dados,
+                fill: true,
+                backgroundColor: 'rgba(212, 175, 55, 0.15)',   // dourado suave
+                borderColor: '#D4AF37',                         // dourado principal
+                borderWidth: 2,
+                pointRadius: 3,
+                pointBackgroundColor: '#D4AF37',
+                tension: 0.35
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#e5e5e5',
+                        font: {
+                            size: 11
                         }
                     }
                 }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#b3b3b3'
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.05)'
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: '#b3b3b3'
+                    },
+                    grid: {
+                        color: 'rgba(255,255,255,0.05)'
+                    }
+                }
             }
-        });
-    </script>
-</body>
-</html>
+        }
+    });
+</script>
+{% endblock %}

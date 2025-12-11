@@ -1,22 +1,22 @@
+{% extends "getos/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-<title>Editar Setor - GetOS</title>
-    
-</head>
-<body>
-    <div class="form-container">
-        <div id="logo-container">
-            <img id="logo" src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
-        </div>
 
-        <h1>Editar Setor</h1>
+{% block title %}Editar Setor - GetOS{% endblock %}
+{% block menu_listar_setores_active %}active{% endblock %}
+{% block submenu_setor_open %}show{% endblock %}
 
-        {% if messages %}
+{% block content %}
+
+<div class="card-dark mb-4">
+    <div class="page-title">Editar Setor</div>
+    <div class="page-subtitle">
+        Atualize as informações do setor selecionado.
+    </div>
+</div>
+
+<div class="card-dark">
+    {% if messages %}
+        <div class="mb-3">
             {% for message in messages %}
                 {% if message.tags == "success" %}
                     <div class="success-msg">{{ message }}</div>
@@ -24,29 +24,47 @@
                     <div class="error-msg">{{ message }}</div>
                 {% endif %}
             {% endfor %}
-        {% endif %}
+        </div>
+    {% endif %}
 
-        <form method="POST">
-            {% csrf_token %}
+    <form method="POST">
+        {% csrf_token %}
 
-		<label for="id_nome">Nome</label>
-		{{ form.nome }}
-		{% if form.nome.errors %}<div class="error-msg">{{ form.nome.errors|striptags }}</div>{% endif %}
+        <div class="row g-3">
 
-		<label for="id_sigla">Sigla</label>
-		{{ form.sigla }}
-		{% if form.sigla.errors %}<div class="error-msg">{{ form.sigla.errors|striptags }}</div>{% endif %}
+            <div class="col-md-6">
+                <label class="form-label">Nome</label>
+                {{ form.nome }}
+                {{ form.nome.errors }}
+            </div>
 
-		<label for="id_secretaria">Secretaria</label>
-		{{ form.secretaria }}
-		{% if form.secretaria.errors %}<div class="error-msg">{{ form.secretaria.errors|striptags }}</div>{% endif %}
+            <div class="col-md-2">
+                <label class="form-label">Sigla</label>
+                {{ form.sigla }}
+                {{ form.sigla.errors }}
+            </div>
 
-		<label for="id_ramal">Ramal</label>
-		{{ form.ramal }}
-		{% if form.ramal.errors %}<div class="error-msg">{{ form.ramal.errors|striptags }}</div>{% endif %}
+            <div class="col-md-4">
+                <label class="form-label">Secretaria</label>
+                {{ form.secretaria }}
+                {{ form.secretaria.errors }}
+            </div>
 
-            <button type="submit" class="submit-btn">Salvar Alterações</button>
-        </form>
-    </div>
-</body>
-</html>
+            <div class="col-md-2">
+                <label class="form-label">Ramal</label>
+                {{ form.ramal }}
+                {{ form.ramal.errors }}
+            </div>
+
+        </div>
+
+        <div class="mt-4 d-flex justify-content-end">
+            <button type="submit" class="btn btn-accent px-4">
+                Salvar Alterações
+            </button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

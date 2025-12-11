@@ -1,43 +1,64 @@
+{% extends "getos/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>Editar Servidor - GetOS</title>
-</head>
-<body>
-    <div class="form-container">
-        <div id="logo-container">
-            <img id="logo" src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
-        </div>
 
-        <h1>Editar Servidor</h1>
+{% block title %}Editar Servidor - GetOS{% endblock %}
+{% block menu_listar_servidores_active %}active{% endblock %}
+{% block submenu_serv_open %}show{% endblock %}
 
-        {% if messages %}
+{% block content %}
+
+<div class="card-dark mb-4">
+    <div class="page-title">Editar Servidor</div>
+    <div class="page-subtitle">
+        Atualize as informações do servidor selecionado.
+    </div>
+</div>
+
+<div class="card-dark">
+    {% if messages %}
+        <div class="mb-3">
             {% for message in messages %}
                 {% if message.tags == "success" %}
-                    <div class="alert alert-success">{{ message }}</div>
+                    <div class="success-msg">{{ message }}</div>
                 {% else %}
-                    <div class="alert alert-error">{{ message }}</div>
+                    <div class="error-msg">{{ message }}</div>
                 {% endif %}
             {% endfor %}
-        {% endif %}
+        </div>
+    {% endif %}
 
-        <form method="POST">
-            {% csrf_token %}
+    <form method="POST">
+        {% csrf_token %}
+        
+        <div class="row g-3">
 
-            <label for="id_nome">Nome</label>
-            {{ form.nome }}
+            <div class="col-md-6">
+                <label class="form-label">Nome</label>
+                {{ form.nome }}
+                {{ form.nome.errors }}
+            </div>
 
-            <label for="id_matricula">Matrícula</label>
-            {{ form.matricula }}
+            <div class="col-md-3">
+                <label class="form-label">Matrícula</label>
+                {{ form.matricula }}
+                {{ form.matricula.errors }}
+            </div>
 
-            <label for="id_setor">Setor</label>
-            {{ form.setor }}
+            <div class="col-md-3">
+                <label class="form-label">Setor</label>
+                {{ form.setor }}
+                {{ form.setor.errors }}
+            </div>
 
-            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-        </form>
-    </div>
-</body>
-</html>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-end">
+            <button type="submit" class="btn btn-accent px-4">
+                Salvar Alterações
+            </button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

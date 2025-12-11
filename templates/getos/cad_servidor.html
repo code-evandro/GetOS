@@ -1,28 +1,21 @@
+{% extends "getos/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
-<title>Cadastrar Servidor - GetOS</title>
-    
-</head>
-<body>
-    <div class="form-container">
 
-        <div class="top-links">
-            <a href="{% url 'menu' %}">Menu Principal</a>
-            <a href="{% url 'logout_redirect' %}">Sair</a>
-        </div>
+{% block title %}Cadastrar Servidor - GetOS{% endblock %}
+{% block nav_cad_servidor_active %}active{% endblock %}
 
-        <div id="logo-container">
-            <img id="logo" src="{% static 'imgs/logo.png' %}" alt="Logo GetOS">
-        </div>
+{% block content %}
 
-        <h1>Cadastrar Servidor</h1>
+<div class="card-dark mb-4">
+    <div class="page-title">Cadastrar Servidor</div>
+    <div class="page-subtitle">
+        Preencha os dados abaixo para cadastrar um novo servidor no sistema.
+    </div>
+</div>
 
-        {% if messages %}
+<div class="card-dark">
+    {% if messages %}
+        <div class="mb-3">
             {% for message in messages %}
                 {% if message.tags == "success" %}
                     <div class="success-msg">{{ message }}</div>
@@ -30,22 +23,39 @@
                     <div class="error-msg">{{ message }}</div>
                 {% endif %}
             {% endfor %}
-        {% endif %}
+        </div>
+    {% endif %}
 
-        <form method="POST">
-            {% csrf_token %}
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row g-3">
 
-            <label for="id_nome">Nome</label>
-            {{ form.nome }}
+            <div class="col-md-6">
+                <label for="id_nome" class="form-label">Nome</label>
+                {{ form.nome }}
+                {{ form.nome.errors }}
+            </div>
 
-            <label for="id_matricula">Matrícula</label>
-            {{ form.matricula }}
+            <div class="col-md-3">
+                <label for="id_matricula" class="form-label">Matrícula</label>
+                {{ form.matricula }}
+                {{ form.matricula.errors }}
+            </div>
 
-            <label for="id_setor">Setor</label>
-            {{ form.setor }}
+            <div class="col-md-3">
+                <label for="id_setor" class="form-label">Setor</label>
+                {{ form.setor }}
+                {{ form.setor.errors }}
+            </div>
 
-            <button type="submit" class="submit-btn">Cadastrar Servidor</button>
-        </form>
-    </div>
-</body>
-</html>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-end">
+            <button type="submit" class="btn btn-accent px-4">
+                Cadastrar Servidor
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

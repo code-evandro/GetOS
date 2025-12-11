@@ -1,15 +1,34 @@
-
 /* ===========================
    RESET
 =========================== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 html, body { min-height: 100%; }
+body { font-family: 'Segoe UI', sans-serif; color: #ffffff; }
 
+/* ===========================
+   THEME VARIABLES (Dark Gold)
+=========================== */
+:root{
+    --bg-body: #0b0b0b;
+    --bg-gradient-start: #0f4037;
+    --bg-gradient-end: #2b6661;
+    --bg-sidebar: #111111;
+    --bg-card: #1e1e1e;
+    --border-subtle: rgba(255,255,255,0.08);
+
+    --accent: #D4AF37;          /* dourado principal */
+    --accent-hover: #B08A2E;    /* dourado mais escuro */
+    --accent-soft: rgba(212,175,55,0.18);
+
+    --text-primary: #f7f7f7;
+    --text-muted: #b3b3b3;
+}
+
+/* ===========================
+   BODY / LAYOUT
+=========================== */
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #0f4037, #2b6661);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -17,64 +36,184 @@ body {
     padding: 30px 0;
 }
 
-/* ===========================
-   CONTAINERS
-=========================== */
+/* Generic containers used by older templates (kept for compatibility) */
 .container, .form-container, .login-container {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
     border-radius: 16px;
     padding: 20px 30px;
     width: 100%;
     max-width: 960px;
 }
 
+/* smaller variants */
 .login-container { max-width: 380px; padding: 40px; text-align: center; }
-.form-container { max-width: 420px; padding: 20px 40px 40px 40px; }
+.form-container { max-width: 420px; padding: 20px 40px 40px; }
 
-.title, h1, h2 { text-align: center; margin-bottom: 20px; }
+/* top links */
+.top-links { display:flex; justify-content:space-between; margin-bottom:10px; font-size:16px; }
+.top-links a { color:var(--text-primary); text-decoration:none; font-weight:700; }
+.top-links a:hover { text-decoration:underline; }
 
-/* ===========================
-   TOPO / LINKS
-=========================== */
-.top-links {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 16px;
-}
-
-.top-links a {
-    color: #ffffff;
-    text-decoration: none;
-    font-weight: bold;
-}
-.top-links a:hover { text-decoration: underline; }
+/* logo (generic) */
+.logo-container { display:flex; justify-content:center; align-items:center; margin-bottom:10px; }
+.logo-container img { width:200px; height:auto; opacity:0.95; }
 
 /* ===========================
-   LOGO
+   APP DARK LAYOUT (sidebar + content)
+   applied only when body.app-dark is used
 =========================== */
-#logo-container, .logo-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 10px;
+body.app-dark {
+    background: radial-gradient(circle at top, #151515 0, #050505 45%, #000 100%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: block; /* override other layout for our app wrapper */
+    padding: 0;
 }
-#logo, .logo-container img {
-    width: 200px;
+
+/* wrapper for sidebar + main */
+.app-wrapper { min-height: 100vh; display: flex; }
+
+/* ---------------------------
+   SIDEBAR
+---------------------------- */
+.app-sidebar {
+    width: 260px;
+    background: radial-gradient(circle at top, #222 0, #111 45%, #050505 100%);
+    border-right: 1px solid var(--border-subtle);
+    padding: 1.5rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/* brand / logo area - we prefer using the big logo only */
+.brand-centered {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding: 18px 0;
+}
+.sidebar-logo-big {
+    width: 140px;
     height: auto;
-    filter: brightness(0) invert(1);
-    opacity: 0.95;
+    filter: brightness(1.12);
+    transition: transform .2s ease, filter .2s ease;
+}
+.sidebar-logo-big:hover { transform: translateY(-2px) scale(1.03); filter: drop-shadow(0 8px 22px rgba(212,175,55,0.12)); }
+
+/* section titles */
+.app-sidebar .sidebar-section-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 1.2rem 0 0.3rem;
 }
 
-/* ===========================
-   FORMULÁRIOS
-=========================== */
-.form-container form { display: flex; flex-direction: column; gap: 10px; }
-label { display: block; margin-bottom: 6px; font-size: 16px; }
+/* nav links */
+.app-sidebar .nav-link {
+    display:flex; align-items:center; gap:0.6rem;
+    padding:0.55rem 0.75rem;
+    border-radius:0.75rem;
+    font-size:0.92rem;
+    color:var(--text-muted);
+    text-decoration:none;
+    border:1px solid transparent;
+    transition: all .12s ease-in-out;
+}
+.app-sidebar .nav-link i { font-size:1rem; color: var(--accent); opacity: 0.95; }
+.app-sidebar .nav-link:hover {
+    background-color: var(--accent-soft);
+    color: var(--accent);
+    border-color: var(--accent-soft);
+}
+.app-sidebar .nav-link.active {
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    color: #000;
+    font-weight: 600;
+}
 
+/* logout link */
+.app-sidebar .nav-link.logout { margin-top:auto; color:#ffb3b3; }
+.app-sidebar .nav-link.logout:hover { background-color: rgba(255,77,79,0.12); color:#ff7875; }
+
+/* submenus */
+.sidebar-group .sidebar-parent { cursor:pointer; display:flex; align-items:center; gap:.6rem; padding:.55rem .75rem; border-radius:.75rem; color:var(--text-muted); border:1px solid transparent; }
+.nav-sublink { padding-left: 2.2rem; font-size: 0.85rem; opacity:0.95; }
+.nav-sublink:hover { opacity: 1; }
+
+/* ---------------------------
+   TOPBAR / MAIN AREA
+---------------------------- */
+.app-main { flex:1; display:flex; flex-direction:column; }
+.app-topbar {
+    height:60px; border-bottom:1px solid var(--border-subtle);
+    display:flex; align-items:center; justify-content:space-between; padding:0 1.75rem;
+    background: linear-gradient(to right, #111, #151515);
+}
+.app-topbar .topbar-title { font-size:0.9rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--text-muted); }
+.app-topbar .topbar-user { font-size:0.9rem; color:var(--text-muted); }
+.app-content { padding:1.75rem; }
+
+/* ===========================
+   CARDS / DASHBOARD / LISTS
+=========================== */
+.card-dark, .dash-card {
+    background-color: var(--bg-card);
+    border-radius: 1rem;
+    border: 1px solid var(--border-subtle);
+    padding: 1.25rem 1.5rem;
+}
+.card h2 { font-size:18px; margin-bottom:12px; }
+
+.indicadores-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:15px; }
+
+.page-title { font-size:1.3rem; font-weight:600; margin-bottom:.25rem; }
+.page-subtitle { font-size:.9rem; color:var(--text-muted); }
+
+/* KPIs / small cards */
+.dash-card-value, .kpi-value { font-size:1.7rem; font-weight:700; color:var(--text-primary); }
+
+/* simple lists */
+.list-styled { list-style:none; padding:0; margin:0; }
+.list-styled li { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.04); color:#eee; }
+
+/* timeline */
+.timeline { margin-top:.6rem; border-left:1px dashed rgba(255,255,255,0.15); padding-left:1rem; }
+
+/* ===========================
+   BUTTONS
+=========================== */
+.btn, button {
+    padding: 12px 16px; border-radius:10px; border:none; cursor:pointer; font-weight:700;
+    transition: background .2s ease, transform .08s ease;
+}
+.btn-accent {
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+    color: #000; border: none; font-weight: 700;
+}
+.btn-accent:hover { background: linear-gradient(135deg, var(--accent-hover), var(--accent)); transform: translateY(-1px); }
+
+.btn-ghost {
+    background: transparent; border:1px solid var(--border-subtle); color:var(--text-muted);
+}
+.btn-ghost:hover { border-color: var(--accent-soft); color: var(--accent); background-color: rgba(255,255,255,0.02); }
+
+/* specific small table buttons */
+.btn-os, .btn-os-disabled {
+    padding:6px 14px; font-size:.85rem; font-weight:600; line-height:1; border-radius:8px; height:34px;
+}
+.btn-os-disabled { background-color:#555; color:#aaa; pointer-events:none; opacity:.6; }
+
+/* ===========================
+   INPUTS & FORMS (dark theme)
+   - Updated: dark translucent background + gold focus
+=========================== */
+.form-container form { display:flex; flex-direction:column; gap:10px; }
+label { display:block; margin-bottom:6px; font-size:16px; color:var(--text-primary); }
+
+/* universal input base */
 input[type="text"],
 input[type="number"],
 input[type="date"],
@@ -84,235 +223,143 @@ select,
 textarea,
 .form-input,
 .form-textarea {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
-    font-size: 16px;
+    width:100%;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.04);      /* dark translucent */
+    color: var(--text-primary);
+    font-size:16px;
+    box-sizing:border-box;
+    transition: border-color .18s ease, background .18s ease, box-shadow .18s ease;
+    backdrop-filter: blur(4px);
 }
 
+/* placeholder */
+input::placeholder, textarea::placeholder { color: #9b9b9b; }
+
+/* focus - gold accent */
 input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: #4ecdc4;
-    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent);
+    background: rgba(255,255,255,0.07);
+    box-shadow: 0 6px 20px rgba(212,175,55,0.06);
 }
 
-select option {
-    background: #1a3c36;
-    color: #fff;
-}
+/* select options */
+body.app-dark select option { background-color: #151515; color: var(--text-primary); }
 
-textarea { min-height: 100px; resize: vertical; }
-
-
-.readonly-field {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 14px;
-    font-size: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-}
+/* readonly visual */
+.readonly-field { background-color: rgba(255,255,255,0.03); padding:10px; border-radius:8px; font-size:16px; border:1px solid rgba(255,255,255,0.06); }
 
 /* ===========================
-   BOTÕES
+   TABLES
 =========================== */
-button, .btn {
-    padding: 12px 16px;
-    border-radius: 10px;
-    border: none;
-    background: #4ecdc4;
-    color: #fff;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.25s ease;
-    width: 100%;
-    margin-top: 8px;
-}
-button:hover, .btn:hover { background: #38a89d; }
+table { width:100%; border-collapse:collapse; margin-top:10px; color:var(--text-primary); }
+th, td { padding:12px; border-bottom:1px solid rgba(255,255,255,0.06); text-align:left; }
+th { background: rgba(255,255,255,0.02); font-weight:700; color:var(--text-muted); }
+tr:hover { background: rgba(255,255,255,0.02); }
 
-/* Botões de cor específica usados no projeto */
-.btn-primary { background: #4ecdc4; }
-.btn-danger, .logout-btn { background: #d9534f; }
-.btn-danger:hover, .logout-btn:hover { background: #c9302c; }
-.btn-warning, .btn-editar { background: #ffc107; color: #000; }
-.btn-warning:hover, .btn-editar:hover { background: #e0a800; }
-.btn-secondary { background: rgba(255, 255, 255, 0.18); }
-.btn-secondary:hover { background: rgba(255, 255, 255, 0.28); }
-
-/* ===========================
-   TABELAS
-=========================== */
-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-th, td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
-th { background: rgba(255,255,255,0.08); font-weight: 700; }
-tr:hover { background: rgba(255,255,255,0.05); }
-
-/* Responsivo para tabelas */
-@media (max-width: 768px) {
-    table, thead, tbody, th, td, tr { display: block; }
-    td { margin-bottom: 10px; font-size: 14px; }
-    th { background: transparent; font-size: 14px; }
-    td:before { content: attr(data-label); font-weight: 700; display: block; color: #ccc; }
+/* compact responsive table fallback */
+@media (max-width:768px){
+    table, thead, tbody, th, td, tr { display:block; }
+    td { margin-bottom:10px; font-size:14px; }
+    th { background:transparent; font-size:14px; }
+    td:before { content: attr(data-label); font-weight:700; display:block; color:#ccc; }
 }
 
 /* ===========================
-   CARDS / DASHBOARD
-=========================== */
-.card, .card-indicador {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 15px;
-    margin-bottom: 18px;
-}
-.card h2 { font-size: 18px; margin-bottom: 12px; }
-
-.indicadores-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-.card-indicador h3 { margin: 0; font-size: 14px; color: #ccc; }
-.card-indicador .valor { font-size: 22px; font-weight: 700; margin: 6px 0; color: #fff; }
-.card-indicador .meta { font-size: 12px; color: #aaa; }
-
-.linha { display: flex; justify-content: space-between; }
-
-canvas { width: 100%; max-height: 240px; }
-
-/* ===========================
-   ALERTAS / MENSAGENS
-=========================== */
-.alert, .success-msg, .error-msg, .feedback {
-    padding: 10px;
-    border-radius: 10px;
-    text-align: center;
-    margin-bottom: 14px;
-    font-weight: 700;
-}
-.alert-success, .success-msg, .feedback {
-    background: rgba(46, 204, 113, 0.2);
-    color: #2ecc71;
-    border: 1px solid rgba(46, 204, 113, 0.35);
-}
-.alert-error, .error-msg {
-    background: rgba(231, 76, 60, 0.2);
-    color: #e74c3c;
-    border: 1px solid rgba(231, 76, 60, 0.35);
-}
-
-.errorlist {
-    color: #ff9999;
-    font-size: 14px;
-    margin-top: -8px;
-    margin-bottom: 12px;
-    list-style: none;
-    padding: 0;
-}
-
-/* ===========================
-   MENUS (menu.html)
-=========================== */
-.menu-btn, .submenu .menu-btn {
-    display: block;
-    width: 280px;
-    padding: 14px;
-    margin: 8px auto;
-    background-color: rgba(255, 255, 255, 0.15);
-    color: #fff;
-    font-size: 18px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.25s ease;
-}
-.menu-btn:hover { background-color: rgba(255, 255, 255, 0.25); }
-.submenu { display: none; flex-direction: column; align-items: center; margin-top: -5px; }
-.submenu .menu-btn { width: 200px; padding: 10px; font-size: 16px; margin: 5px 0; }
-
-/* ===========================
-   UTILITÁRIOS
-=========================== */
-.container-narrow { max-width: 800px; }
-.container-wide { max-width: 1000px; }
-.m-0 { margin: 0; } .mb-1 { margin-bottom: 6px; } .mb-2 { margin-bottom: 12px; } .mb-3 { margin-bottom: 18px; }
-.p-0 { padding: 0; } .p-1 { padding: 6px; } .p-2 { padding: 12px; } .p-3 { padding: 18px; }
-
-/* ===========================
-   BARRA DE FILTROS (visualizar_os)
+   FILTER BAR (visualizar_os)
 =========================== */
 .filter-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
-    margin-bottom: 18px;
+    display:flex; align-items:center; gap:10px;
+    padding:12px; background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px;
+    margin-bottom:18px;
 }
-.filter-bar .field {
-    flex: 1;
-    min-width: 90px;
+.filter-bar .field { flex:1; min-width:90px; }
+.filter-bar input, .filter-bar select { width:100%; height:40px; font-size:14px; }
+.filter-bar .btn-filter { flex:0 0 140px; height:40px; }
+
+/* responsive adjustments */
+@media (max-width:960px){
+    .filter-bar { flex-wrap:wrap; }
+    .filter-bar .field { flex:1 1 45%; min-width:200px; }
+    .filter-bar .btn-filter { flex:1 1 100%; width:100%; }
 }
-.filter-bar input,
-.filter-bar select {
-    margin: 0;
-    width: 100%;
-    height: 40px;
-    font-size: 14px;
-}
-.filter-bar .btn-filter {
-    flex: 0 0 140px;
-    height: 40px;
-    margin: 0;
-    width: auto;
-}
-@media (max-width: 960px) {
-    .filter-bar { flex-wrap: wrap; }
-    .filter-bar .field { flex: 1 1 45%; min-width: 200px; }
-    .filter-bar .btn-filter { flex: 1 1 100%; width: 100%; }
-}
+
 /* ===========================
-   AÇÕES NA TABELA (Finalizar / PDF)
+   BADGES / STATUS
 =========================== */
-.acoes-btns {
-    display: flex;
-    align-items: center;
-    gap: 10px;                 
+.badge-os { display:inline-block; padding:6px 14px; font-size:.85rem; font-weight:600; border-radius:8px; }
+.badge-status-aberta { background-color: rgba(255,193,7,0.12); color:#ffd666; }
+.badge-status-finalizada { background-color: rgba(82,196,26,0.12); color:#b7eb8f; }
+
+/* ===========================
+   SIDEBAR RESPONSIVITY (mobile)
+=========================== */
+@media (max-width:991.98px){
+    .app-sidebar { position:fixed; z-index:1040; left:-260px; top:0; bottom:0; transition:left .2s ease-in-out; }
+    .app-sidebar.open { left:0; }
 }
 
-.acoes-btns .btn {
-    width: auto;               
-    padding: 8px 12px;         
-    line-height: 1;
-    white-space: nowrap;       
+/* ===========================
+   DASHBOARD / KPIS STYLES (condensed)
+=========================== */
+.dashboard-header { display:flex; justify-content:space-between; align-items:center; gap:1.25rem; border-radius:1rem; padding:12px; background: linear-gradient(90deg, rgba(212,175,55,0.04), transparent); border:1px solid rgba(212,175,55,0.06); }
+.badge-pill { border-radius:999px; border:1px solid rgba(255,255,255,0.08); padding:6px 12px; font-size:.78rem; text-transform:uppercase; color:#f1f1f1; background-color: rgba(0,0,0,0.35); }
+.badge-pill.soft { border-color: rgba(212,175,55,0.45); color: #f7e9b3; }
+
+/* KPI cards */
+.dashboard-kpis .kpi-card { background: radial-gradient(circle at top, rgba(255,255,255,0.04), transparent 60%); border-radius:1rem; border:1px solid rgba(255,255,255,0.06); padding:1rem; }
+.kpi-label { font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:#a0a0a0; }
+.kpi-value.kpi-warning { color:#ffd666; }
+.kpi-value.kpi-success { color:#b7eb8f; }
+
+/* RANKINGS / TIMELINE / SMALL LISTS */
+.ranking-list li { display:flex; align-items:center; justify-content:space-between; padding:7px 0; border-bottom:1px solid rgba(255,255,255,0.04); font-size:.9rem; }
+.ranking-list .value { color:var(--accent); font-weight:600; }
+
+/* timeline item */
+.timeline-item .dot { width:9px; height:9px; border-radius:999px; background:var(--accent); position:absolute; left:-14px; top:4px; }
+
+/* ===========================
+   SMALL UTILITY CLASSES
+=========================== */
+.m-0 { margin:0; } .mb-1 { margin-bottom:6px; } .mb-2 { margin-bottom:12px; } .mb-3 { margin-bottom:18px; }
+.p-0 { padding:0; } .p-1 { padding:6px; } .p-2 { padding:12px; } .p-3 { padding:18px; }
+.container-narrow { max-width:800px; }
+.container-wide { max-width:1000px; }
+
+/* final small tweaks */
+.app-content img { max-width:100%; height:auto; display:block; }
+
+
+/* ===========================================================
+   FIX – (Chrome, Edge e Firefox)
+   =========================================================== */
+
+/* Chrome / Edge Autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    -webkit-text-fill-color: #fff !important;
+    -webkit-box-shadow: 0 0 0px 1000px rgba(255,255,255,0.08) inset !important;
+    box-shadow: 0 0 0px 1000px rgba(255,255,255,0.08) inset !important;
+    transition: background-color 5000s ease-in-out 0s !important;
 }
 
-/* ajustes finos por variante (opcional) */
-.acoes-btns .btn-warning { padding: 8px 10px; }
-.acoes-btns .btn-secondary { padding: 8px 12px; }
-
-/* dá um respiro mínimo pra coluna de ações em desktop */
-td[data-label="Ações"], th:last-child {
-    width: 150px;
+/* Firefox Autofill */
+input:-moz-autofill,
+textarea:-moz-autofill,
+select:-moz-autofill {
+    box-shadow: 0 0 0px 1000px rgba(255,255,255,0.08) inset !important;
+    -moz-text-fill-color: #fff !important;
 }
 
-/* responsivo: se faltar espaço, deixa quebrar para a linha de baixo */
-@media (max-width: 960px) {
-    .acoes-btns { flex-wrap: wrap; }
-    td[data-label="Ações"], th:last-child { width: auto; }
-}
-
-/* Botão desabilitado (OS finalizada) */
-.btn-disabled {
-    background-color: #777 !important;
-    color: #ccc !important;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: not-allowed;
-    opacity: 0.6;
-    text-decoration: none;
-    pointer-events: none; 
+/* Quando a entrada já tem conteúdo */
+input:not(:placeholder-shown),
+input:valid {
+    background: rgba(255,255,255,0.08) !important;
 }
