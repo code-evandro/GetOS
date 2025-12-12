@@ -34,7 +34,7 @@ Este documento consolida visão geral, requisitos, arquitetura, instalação, op
 - Framework: Django (Python 3.x)
 - Apps do projeto: core, setores, servidores, ordens.
 - Templates/Front-end: HTML/CSS com estilo unificado.
-- Banco de Dados: SQLite (desenvolvimento). Pode migrar para PostgreSQL em produção.
+- Banco de Dados: PostgreSQL 18
 - Implantação atual: Host Windows, rede interna.
 Modelos de Dados (resumo):
 Setor: nome, sigla, secretaria, ramal (opcional).
