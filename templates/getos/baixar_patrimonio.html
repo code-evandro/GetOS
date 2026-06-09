@@ -1,0 +1,56 @@
+{% extends "getos/base.html" %}
+{% load static %}
+
+{% block title %}Baixar Patrimônio - {{ patrimonio.numero }} - GetOS{% endblock %}
+{% block submenu_patrimonio_open %}show{% endblock %}
+
+{% block content %}
+
+<div class="card-dark mb-4">
+    <div class="page-title text-danger">Baixar Patrimônio</div>
+    <div class="page-subtitle">
+        Patrimônio <strong>{{ patrimonio.numero }}</strong> - {{ patrimonio.descricao }}
+    </div>
+</div>
+
+<div class="card-dark">
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                {% if message.tags == "success" %}
+                    <div class="success-msg">{{ message }}</div>
+                {% else %}
+                    <div class="error-msg">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="alert alert-danger bg-dark border-danger text-danger mb-4">
+        <i class="bi bi-exclamation-triangle me-1"></i>
+        <strong>Atenção:</strong> A baixa de patrimônio é irreversível dentro do sistema.
+        Um motivo obrigatório deve ser informado para registro no histórico.
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-12">
+                <label for="id_motivo" class="form-label">Motivo da Baixa <span class="text-danger">*</span></label>
+                {{ form.motivo }}
+                {{ form.motivo.errors }}
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+            <a href="{% url 'patrimonio_detalhes' patrimonio.id %}" class="btn btn-ghost">
+                ← Cancelar
+            </a>
+            <button type="submit" class="btn btn-danger px-4">
+                Confirmar Baixa
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

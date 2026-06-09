@@ -1,0 +1,55 @@
+{% extends "getos/base.html" %}
+{% load static %}
+
+{% block title %}Transferir Setor - {{ patrimonio.numero }} - GetOS{% endblock %}
+{% block submenu_patrimonio_open %}show{% endblock %}
+
+{% block content %}
+
+<div class="card-dark mb-4">
+    <div class="page-title">Transferir Setor</div>
+    <div class="page-subtitle">
+        Patrimônio <strong>{{ patrimonio.numero }}</strong> - {{ patrimonio.descricao }}
+    </div>
+</div>
+
+<div class="card-dark">
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                {% if message.tags == "success" %}
+                    <div class="success-msg">{{ message }}</div>
+                {% else %}
+                    <div class="error-msg">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="alert alert-warning bg-dark border-warning text-warning mb-4">
+        <i class="bi bi-info-circle me-1"></i>
+        Setor atual: <strong>{{ patrimonio.setor.nome }}</strong> ({{ patrimonio.setor.secretaria }})
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="id_setor" class="form-label">Novo Setor</label>
+                {{ form.setor }}
+                {{ form.setor.errors }}
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+            <a href="{% url 'patrimonio_detalhes' patrimonio.id %}" class="btn btn-ghost">
+                ← Voltar
+            </a>
+            <button type="submit" class="btn btn-accent px-4">
+                Confirmar Transferência
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

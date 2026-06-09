@@ -1,0 +1,191 @@
+{% extends "getos/base.html" %}
+{% load static %}
+
+{% block title %}Patrimônio {{ patrimonio.numero }} - GetOS{% endblock %}
+{% block submenu_patrimonio_open %}show{% endblock %}
+
+{% block content %}
+
+<div class="card-dark mb-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+            <div class="page-title">Patrimônio {{ patrimonio.numero }}</div>
+            <div class="page-subtitle">{{ patrimonio.descricao }}</div>
+        </div>
+        <span class="badge {{ patrimonio.status_badge_class }} fs-6 px-3 py-2">
+            {{ patrimonio.get_status_display }}
+        </span>
+    </div>
+</div>
+
+{% if messages %}
+<div class="mb-3">
+    {% for message in messages %}
+        {% if message.tags == "success" %}
+            <div class="success-msg">{{ message }}</div>
+        {% elif message.tags == "warning" %}
+            <div class="error-msg">{{ message }}</div>
+        {% else %}
+            <div class="error-msg">{{ message }}</div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- DADOS DO PATRIMÔNIO -->
+<div class="row g-4 mb-4">
+    <div class="col-md-6">
+        <div class="card-dark h-100">
+            <h6 class="text-warning mb-3"><i class="bi bi-info-circle me-1"></i> Dados do Bem</h6>
+            <table class="table table-dark table-sm mb-0">
+                <tr>
+                    <td class="text-muted" style="width: 140px;">Número:</td>
+                    <td><strong>{{ patrimonio.numero }}</strong></td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Descrição:</td>
+                    <td>{{ patrimonio.descricao }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Status:</td>
+                    <td>
+                        <span class="badge {{ patrimonio.status_badge_class }}">
+                            {{ patrimonio.get_status_display }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Observação:</td>
+                    <td>{{ patrimonio.observacao|default:"—" }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card-dark h-100">
+            <h6 class="text-warning mb-3"><i class="bi bi-geo-alt me-1"></i> Localização</h6>
+            <table class="table table-dark table-sm mb-0">
+                <tr>
+                    <td class="text-muted" style="width: 140px;">Setor:</td>
+                    <td>{{ patrimonio.setor.nome }} - {{ patrimonio.setor.secretaria }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Responsável:</td>
+                    <td>{{ patrimonio.responsavel.get_full_name|default:patrimonio.responsavel.username }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Cadastrado em:</td>
+                    <td>{{ patrimonio.criado_em|date:"d/m/Y H:i" }}</td>
+                </tr>
+                <tr>
+                    <td class="text-muted">Atualizado em:</td>
+                    <td>{{ patrimonio.atualizado_em|date:"d/m/Y H:i" }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- AÇÕES -->
+{% if patrimonio.status != 'baixado' %}
+<div class="card-dark mb-4">
+    <h6 class="text-warning mb-3"><i class="bi bi-gear me-1"></i> Ações</h6>
+    <div class="d-flex flex-wrap gap-2">
+        <a href="{% url 'patrimonio_transferir_setor' patrimonio.id %}"
+           class="btn btn-sm btn-accent">
+            <i class="bi bi-arrow-left-right me-1"></i> Transferir Setor
+        </a>
+        <a href="{% url 'patrimonio_transferir_responsavel' patrimonio.id %}"
+           class="btn btn-sm btn-accent">
+            <i class="bi bi-person-arrows me-1"></i> Transferir Responsável
+        </a>
+        <a href="{% url 'patrimonio_alterar_status' patrimonio.id %}"
+           class="btn btn-sm btn-ghost">
+            <i class="bi bi-toggle-on me-1"></i> Alterar Status
+        </a>
+        <a href="{% url 'patrimonio_baixar' patrimonio.id %}"
+           class="btn btn-sm btn-danger">
+            <i class="bi bi-trash me-1"></i> Baixar Patrimônio
+        </a>
+    </div>
+</div>
+{% else %}
+<div class="card-dark mb-4">
+    <div class="text-muted text-center py-3">
+        <i class="bi bi-lock"></i> Este patrimônio está baixado e não permite alterações.
+    </div>
+</div>
+{% endif %}
+
+<!-- HISTÓRICO -->
+<div class="card-dark p-0">
+    <div class="p-3 border-bottom border-secondary">
+        <h6 class="text-warning mb-0"><i class="bi bi-clock-history me-1"></i> Histórico de Movimentações</h6>
+    </div>
+
+    {% if historico %}
+    <div class="p-3">
+        <div class="timeline">
+            {% for registro in historico %}
+            <div class="timeline-item mb-3 pb-3 border-bottom border-secondary">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <span class="badge bg-secondary me-2">
+                            {{ registro.get_tipo_movimento_display }}
+                        </span>
+                        <small class="text-muted">
+                            {{ registro.data|date:"d/m/Y H:i" }}
+                        </small>
+                    </div>
+                    <small class="text-muted">
+                        por {{ registro.usuario.get_full_name|default:registro.usuario.username }}
+                    </small>
+                </div>
+                <div class="mt-2">{{ registro.descricao }}</div>
+
+                {% if registro.setor_anterior or registro.setor_novo %}
+                <div class="mt-1 small">
+                    <span class="text-muted">Setor:</span>
+                    {% if registro.setor_anterior %}<span class="text-warning">{{ registro.setor_anterior }}</span>{% else %}—{% endif %}
+                    →
+                    {% if registro.setor_novo %}<span class="text-success">{{ registro.setor_novo }}</span>{% else %}—{% endif %}
+                </div>
+                {% endif %}
+
+                {% if registro.responsavel_anterior or registro.responsavel_novo %}
+                <div class="mt-1 small">
+                    <span class="text-muted">Responsável:</span>
+                    {% if registro.responsavel_anterior %}<span class="text-warning">{{ registro.responsavel_anterior }}</span>{% else %}—{% endif %}
+                    →
+                    {% if registro.responsavel_novo %}<span class="text-success">{{ registro.responsavel_novo }}</span>{% else %}—{% endif %}
+                </div>
+                {% endif %}
+
+                {% if registro.status_anterior or registro.status_novo %}
+                <div class="mt-1 small">
+                    <span class="text-muted">Status:</span>
+                    {% if registro.status_anterior %}<span class="text-warning">{{ registro.status_anterior }}</span>{% else %}—{% endif %}
+                    →
+                    {% if registro.status_novo %}<span class="text-success">{{ registro.status_novo }}</span>{% else %}—{% endif %}
+                </div>
+                {% endif %}
+
+                {% if registro.motivo_baixa %}
+                <div class="mt-1 small">
+                    <span class="text-muted">Motivo da baixa:</span>
+                    <span class="text-danger">{{ registro.motivo_baixa }}</span>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-4 text-muted">
+        Nenhum registro de histórico.
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
