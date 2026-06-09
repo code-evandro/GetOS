@@ -1,0 +1,75 @@
+{% extends "getos/base.html" %}
+{% load static %}
+
+{% block title %}Cadastrar Patrimônio - GetOS{% endblock %}
+{% block menu_cad_patrimonio_active %}active{% endblock %}
+{% block submenu_patrimonio_open %}show{% endblock %}
+
+{% block content %}
+
+<div class="card-dark mb-4">
+    <div class="page-title">Cadastrar Patrimônio</div>
+    <div class="page-subtitle">
+        Preencha os dados abaixo para cadastrar um novo bem patrimonial.
+        O número de patrimônio será gerado automaticamente.
+    </div>
+</div>
+
+<div class="card-dark">
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                {% if message.tags == "success" %}
+                    <div class="success-msg">{{ message }}</div>
+                {% else %}
+                    <div class="error-msg">{{ message }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="POST" action="{% url 'patrimonio_cadastrar' %}">
+        {% csrf_token %}
+        <div class="row g-3">
+
+            <div class="col-md-8">
+                <label for="id_descricao" class="form-label">Descrição</label>
+                {{ form.descricao }}
+                {{ form.descricao.errors }}
+            </div>
+
+            <div class="col-md-4">
+                <label for="id_status" class="form-label">Status</label>
+                {{ form.status }}
+                {{ form.status.errors }}
+            </div>
+
+            <div class="col-md-6">
+                <label for="id_setor" class="form-label">Setor</label>
+                {{ form.setor }}
+                {{ form.setor.errors }}
+            </div>
+
+            <div class="col-md-6">
+                <label for="id_responsavel" class="form-label">Responsável</label>
+                {{ form.responsavel }}
+                {{ form.responsavel.errors }}
+            </div>
+
+            <div class="col-12">
+                <label for="id_observacao" class="form-label">Observação</label>
+                {{ form.observacao }}
+                {{ form.observacao.errors }}
+            </div>
+
+        </div>
+
+        <div class="mt-4 d-flex justify-content-end">
+            <button type="submit" class="btn btn-accent px-4">
+                Cadastrar Patrimônio
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

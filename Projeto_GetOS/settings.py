@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'setores',
     'servidores',
     'ordens',
+    'patrimonio',
 ]
 
 MIDDLEWARE = [

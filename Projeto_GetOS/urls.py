@@ -15,6 +15,7 @@ urlpatterns = [
     path('setores/', include('setores.urls')),
     path('servidores/', include('servidores.urls')),
     path('ordens/', include('ordens.urls')),
+    path('patrimonio/', include('patrimonio.urls')),
 
     # Redirecionamento da raiz para o login
     path('', RedirectView.as_view(url='/login/', permanent=False)),

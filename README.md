@@ -5,7 +5,7 @@ Este documento consolida visão geral, requisitos, arquitetura, instalação, op
 - Objetivo: Centralizar abertura, acompanhamento e fechamento de Ordens de Serviço de TI, melhorando rastreabilidade, tempo de resposta e qualidade do atendimento aos servidores.
 - Escopo atual: Cadastro de Setores e Servidores; criação/visualização/fechamento de OS; designação de técnico; filtros por data, técnico, setor, servidor e situação; geração de PDF da OS; dashboard com indicadores básicos (OS por mês, listagens por técnico/setor, recentes).
 - Público-alvo: Equipe de TI (técnicos, triagem), servidores requisitantes, e administradores do sistema.
-- Contexto de uso: Rede interna da Prefeitura (ambiente Windows). Execução em host local acessível via IP interno (https://192.168.0.153:8000))
+- Contexto de uso: Rede interna da Prefeitura (ambiente Windows). Execução em host local acessível via IP interno (http://192.168.0.153:8000))
 2. Requisitos:
 2.1 Requisitos Funcionais (RF)
 1. RF-01 Cadastrar Setor (com: nome, sigla, secretaria, ramal opcional).
@@ -34,7 +34,7 @@ Este documento consolida visão geral, requisitos, arquitetura, instalação, op
 - Framework: Django (Python 3.x)
 - Apps do projeto: core, setores, servidores, ordens.
 - Templates/Front-end: HTML/CSS com estilo unificado.
-- Banco de Dados: SQLite (desenvolvimento). Pode migrar para PostgreSQL em produção.
+- Banco de Dados: PostgreSQL 18
 - Implantação atual: Host Windows, rede interna.
 Modelos de Dados (resumo):
 Setor: nome, sigla, secretaria, ramal (opcional).

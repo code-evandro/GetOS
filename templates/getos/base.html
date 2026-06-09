@@ -108,6 +108,28 @@
                 </div>
             </div>
 
+            <!-- Grupo Patrimônio -->
+            <div class="sidebar-group mt-1">
+                <button class="nav-link sidebar-parent" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#submenu-patrimonio"
+                        aria-expanded="false">
+                    <i class="bi bi-box-seam"></i>
+                    <span>Patrimônio</span>
+                    <i class="bi bi-chevron-down ms-auto small"></i>
+                </button>
+                <div class="collapse {% block submenu_patrimonio_open %}{% endblock %}" id="submenu-patrimonio">
+                    <a href="{% url 'patrimonio_cadastrar' %}"
+                       class="nav-link nav-sublink {% block menu_cad_patrimonio_active %}{% endblock %}">
+                        Cadastrar
+                    </a>
+                    <a href="{% url 'patrimonio_listar' %}"
+                       class="nav-link nav-sublink {% block menu_listar_patrimonios_active %}{% endblock %}">
+                        Listar
+                    </a>
+                </div>
+            </div>
+
             <div class="sidebar-section-title">Análises</div>
 
             <a href="{% url 'dashboard' %}"
